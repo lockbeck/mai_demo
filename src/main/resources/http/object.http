@@ -1,0 +1,68 @@
+###OBJECT CREATE
+POST http://localhost:8085/object
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTYyMTEsImV4cCI6MTY4NzM0MjYxMSwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjoyfQ.2BKUI_AnLrJlto5_xYQm0fUKjYhIHh0zCFgAxeEB0xg
+
+{
+  "name": "obj2",
+  "ownerSubject": "obj2",
+  "ownerInfo": "obj2",
+  "goal": "obj1",
+  "importance": "obj1",
+  "damages": "obj1",
+  "certificateDTO": {
+    "info": "certtt",
+    "url": "www.kun.uz"
+  },
+  "licenceDTO": {
+    "info": "licence",
+    "url": "www.daryo.uz"
+  },
+  "web_usage": "obj1",
+  "cyber_security": "obj1",
+  "threats": "obj1",
+  "hacked_outcomes": "obj1",
+  "actions": " obj1"
+}
+
+###PUBLISH OBJECT
+PUT http://localhost:8085/object/adm/changeStatus
+/ff80808188d84c8c0188d878180b0001
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTg1MDAsImV4cCI6MTY4NzM0NDkwMCwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjozfQ.FypXPnNNYzHAYkUoC7Xlxh6Lz9hVhg7wnm4ki3_niqo
+
+###UPDATE OBJECT
+PUT http://localhost:8085/object/man/ff80808188d84c8c0188d878180b0001
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTg5ODQsImV4cCI6MTY4NzM0NTM4NCwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjo0fQ.rXQe58N_bo0kCKbhCFRV7rRp0jOXT_iswlXoFJ2H28w
+
+{
+  "name": "upda1",
+  "ownerSubject": "up1",
+  "ownerInfo": "up1",
+  "goal": "up1",
+  "importance": "up1",
+  "damages": "obj2",
+  "certificateDTO": {
+    "info": "certtt",
+    "url": "www.kun.uz"
+  },
+  "licenceDTO": {
+    "info": "licence",
+    "url": "www.daryo.uz"
+  },
+  "web_usage": "obj1",
+  "cyber_security": "obj1",
+  "threats": "obj1",
+  "hacked_outcomes": "obj1",
+  "actions": " obj1"
+}
+
+###GET OBJECT BY ID
+GET http://localhost:8085/object/adm/ff80808188d84c8c0188d878180b0001
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTg5ODQsImV4cCI6MTY4NzM0NTM4NCwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjo0fQ.rXQe58N_bo0kCKbhCFRV7rRp0jOXT_iswlXoFJ2H28w
+###GET OBJECT pagination
+GET http://localhost:8085/object/man/pagination
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTg5ODQsImV4cCI6MTY4NzM0NTM4NCwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjo0fQ.rXQe58N_bo0kCKbhCFRV7rRp0jOXT_iswlXoFJ2H28w
+###DELETE OBJECT
+DELETE http://localhost:8085/object/adm/delete/ff80808188d84c8c0188d878180b0001
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTk3NTcsImV4cCI6MTY4NzM0NjE1NywiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjozfQ.yk8FG3f16tfsd3fcvE3cOje0Ws6j_hIPLOOXPbNMEdU

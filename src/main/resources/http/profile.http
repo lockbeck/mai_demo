@@ -1,0 +1,18 @@
+POST http://localhost:8085/profile/change_pass
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTQxMzcsImV4cCI6MTY4NzM0MDUzNywiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjoxfQ.Fu6Q6J9RpA4eQdfMy6pn0rOrOj0u_GKdsC-oDOpC23w
+
+{
+  "password": "password"
+}
+###
+POST http://localhost:8085/profile/adm/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTYxNDEsImV4cCI6MTY4NzM0MjU0MSwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjoxfQ.XsKOGALvlqcBnnSxrzjogXDPjmXnMOZxoDFiDAmDs3M
+
+{
+  "email": "manager@gmail.com",
+  "username": "manager",
+  "password": "manager1",
+  "role": "ROLE_MANAGER"
+}
