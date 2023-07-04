@@ -1,5 +1,6 @@
 package com.company.entity;
 
+import com.company.enums.ObjectImportance;
 import com.company.enums.ObjectStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,8 +31,10 @@ public class ObjectEntity {
     private String ownerInfo;
     @Column(nullable = false)
     private String goal;
+
     @Column(nullable = false)
-    private String importance;
+    @Enumerated(EnumType.STRING)
+    private ObjectImportance importance;
     @Column(nullable = false)
     private String damages;
 
@@ -69,7 +72,7 @@ public class ObjectEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private ObjectStatus status = ObjectStatus.NOT_PUBLISHED;
+    private ObjectStatus status = ObjectStatus.WAITING;
 
     public ObjectEntity(String uuid) {
         this.uuid = uuid;

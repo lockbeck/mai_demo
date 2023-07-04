@@ -1,33 +1,32 @@
 ###OBJECT CREATE
 POST http://localhost:8085/object
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTYyMTEsImV4cCI6MTY4NzM0MjYxMSwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjoyfQ.2BKUI_AnLrJlto5_xYQm0fUKjYhIHh0zCFgAxeEB0xg
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODc4NjI2NjUsImV4cCI6MTY4Nzk0OTA2NSwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjoyfQ.Uf0q52SEpIosLt6c0-BNG7RnIWh8avWbiaWFEmLwCSI
 
 {
-  "name": "obj2",
-  "ownerSubject": "obj2",
-  "ownerInfo": "obj2",
-  "goal": "obj1",
-  "importance": "obj1",
-  "damages": "obj1",
+  "name": "obyekt",
+  "ownerSubject": "obekt",
+  "ownerInfo": "obekt",
+  "goal": "obekt",
+  "importance": "LOW",
+  "damages": "obj3",
   "certificateDTO": {
-    "info": "certtt",
-    "url": "www.kun.uz"
+    "info": "sertifikat",
+    "url": "www.lock.uz"
   },
   "licenceDTO": {
-    "info": "licence",
+    "info": "litsenzoia",
     "url": "www.daryo.uz"
   },
-  "web_usage": "obj1",
-  "cyber_security": "obj1",
-  "threats": "obj1",
-  "hacked_outcomes": "obj1",
-  "actions": " obj1"
+  "web_usage": "cs",
+  "cyber_security": "dscfsdfsdf",
+  "threats": "sdfs",
+  "hacked_outcomes": "sadsf",
+  "actions": " sdasf"
 }
 
 ###PUBLISH OBJECT
-PUT http://localhost:8085/object/adm/changeStatus
-/ff80808188d84c8c0188d878180b0001
+PUT http://localhost:8085/object/adm/changeStatus/ff80808188d84c8c0188d878180b0001
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTg1MDAsImV4cCI6MTY4NzM0NDkwMCwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjozfQ.FypXPnNNYzHAYkUoC7Xlxh6Lz9hVhg7wnm4ki3_niqo
 
 ###UPDATE OBJECT
@@ -61,8 +60,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTg5ODQsImV4cCI6MTY4N
 GET http://localhost:8085/object/adm/ff80808188d84c8c0188d878180b0001
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTg5ODQsImV4cCI6MTY4NzM0NTM4NCwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjo0fQ.rXQe58N_bo0kCKbhCFRV7rRp0jOXT_iswlXoFJ2H28w
 ###GET OBJECT pagination
-GET http://localhost:8085/object/man/pagination
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTg5ODQsImV4cCI6MTY4NzM0NTM4NCwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjo0fQ.rXQe58N_bo0kCKbhCFRV7rRp0jOXT_iswlXoFJ2H28w
+GET http://localhost:8080/object/man/pagination
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODg0NzAzMzksImV4cCI6MTY4ODU1NjczOSwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjo0fQ.1wtWzHfGIghmRDBnSDvdxWzQJ18M7y5vpoHlj3oHB0I
 ###DELETE OBJECT
-DELETE http://localhost:8085/object/adm/delete/ff80808188d84c8c0188d878180b0001
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTk3NTcsImV4cCI6MTY4NzM0NjE1NywiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjozfQ.yk8FG3f16tfsd3fcvE3cOje0Ws6j_hIPLOOXPbNMEdU
+DELETE http://localhost:8080/object/adm/delete/ff80808188d84c8c0188d878180b0001
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODg0NDk4NDAsImV4cCI6MTY4ODUzNjI0MCwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjoyfQ.gC7VuuEif0r97oR5kzizu5PQZoM3K4ehiju2sUKrtCI
+###GET OBJECT BY Status
+GET http://localhost:8080/object/getStatus/REJECTED
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODg0NDk4NDAsImV4cCI6MTY4ODUzNjI0MCwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjoyfQ.gC7VuuEif0r97oR5kzizu5PQZoM3K4ehiju2sUKrtCI
+###SUCCESS
+PUT http://localhost:8080/object/adm/success/40287ac588fc73b10188fc75b0840000
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODg0NzA1NjMsImV4cCI6MTY4ODU1Njk2MywiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjozfQ.93dUcboijD5oofQeIf4qAL3rYtlwoM25WYnDHXqdS_I

@@ -2,6 +2,7 @@ package com.company.dto.object;
 
 import com.company.dto.CertificateDTO;
 import com.company.dto.LicenceDTO;
+import com.company.enums.ObjectImportance;
 import com.company.enums.ObjectStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +24,7 @@ public class ObjectFullInfoDTO {
     private String ownerSubject;
     private String ownerInfo;
     private String goal;
-    private String importance;
+    private ObjectImportance importance;
     private String damages;
 
     private CertificateDTO certificateDTO;

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.swing.*;
 import java.security.MessageDigest;
 
 @SpringBootTest
@@ -50,4 +51,5 @@ class MaiDemoApplicationTests {
         System.out.println(sha256("1111"));
         System.out.println(sha256("111"));
     }
+
 }

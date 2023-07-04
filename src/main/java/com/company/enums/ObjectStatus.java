@@ -1,7 +1,7 @@
 package com.company.enums;
 
-public enum ObjectStatus {
+public enum
+ObjectStatus {
+REJECTED,SUCCESS,WAITING, DELETED, PROCESSING
 
-    PUBLISHED,
-    NOT_PUBLISHED
 }

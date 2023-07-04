@@ -9,6 +9,7 @@ import com.company.entity.ObjectEntity;
 import com.company.entity.ProfileEntity;
 import com.company.enums.ObjectStatus;
 import com.company.enums.ProfileRole;
+import com.company.exp.BadRequestException;
 import com.company.exp.ItemNotFoundException;
 import com.company.exp.NoPermissionException;
 import com.company.exp.NotPermissionException;
@@ -49,6 +50,7 @@ public class ObjectService {
         entity.setThreats(dto.getThreats());
         entity.setHacked_outcomes(dto.getHacked_outcomes());
         entity.setActions(dto.getActions());
+        entity.setStatus(ObjectStatus.WAITING);
 
 
         objectRepository.save(entity);
@@ -66,7 +68,9 @@ public class ObjectService {
         if (!profile.getRole().equals(ProfileRole.ROLE_MANAGER)) {
             return new ResponseInfoDTO(-1, "no access");
         }
-        System.out.println("noaccess");
+        if(entity.getVisible().equals(Boolean.FALSE)){
+            throw new NoPermissionException("OBJECT HAS BEEN DELETED");
+        }
 
         entity.setName(dto.getName());
         entity.setOwnerSubject(dto.getOwnerSubject());
@@ -74,11 +78,11 @@ public class ObjectService {
         entity.setGoal(dto.getGoal());
         entity.setImportance(dto.getImportance());
         entity.setDamages(dto.getDamages());
-        System.out.println("damages");
+
 
         entity.setCertificate(certificateService.saveNew(entity.getCertificate(),dto.getCertificateDTO()));
         entity.setLicence(licenceService.saveNew(entity.getLicence(),dto.getLicenceDTO()));
-        System.out.println("certlicen");
+
 
         entity.setWeb_usage(dto.getWeb_usage());
         entity.setCyber_security(dto.getCyber_security());
@@ -93,7 +97,7 @@ public class ObjectService {
         return new ResponseInfoDTO(1, "Object successfully updated");
 
     }
-    public ResponseInfoDTO publish(String objectId){
+    public ResponseInfoDTO reject(String objectId){
         ProfileEntity profile = profileService.getProfile();
 
         ObjectEntity entity = get(objectId);
@@ -101,13 +105,32 @@ public class ObjectService {
         if (!profile.getRole().equals(ProfileRole.ROLE_ADMIN)) {
             return new ResponseInfoDTO(-1, "no access");
         }
-        if(entity.getStatus().equals(ObjectStatus.PUBLISHED)){
-            objectRepository.publish(entity.getUuid(), ObjectStatus.NOT_PUBLISHED);
+        if(entity.getVisible().equals(Boolean.FALSE)){
+            throw new NoPermissionException("OBJECT HAS BEEN DELETED");
         }
-        else {
-            objectRepository.publish(entity.getUuid(), ObjectStatus.PUBLISHED);
+        if(entity.getStatus().equals(ObjectStatus.REJECTED)){
+            throw new BadRequestException("OBJECT ALREADY REJECTED");
+        }
+        objectRepository.changeStatus(entity.getUuid(), ObjectStatus.REJECTED);
 
+        return new ResponseInfoDTO(1, "OBJECT STATUS SUCCESSFULLY UPDATED");
+    }
+    public ResponseInfoDTO success(String objectId){
+        ProfileEntity profile = profileService.getProfile();
+
+        ObjectEntity entity = get(objectId);
+
+        if (!profile.getRole().equals(ProfileRole.ROLE_ADMIN)) {
+            return new ResponseInfoDTO(-1, "no access");
         }
+        if(entity.getVisible().equals(Boolean.FALSE)){
+            throw new NoPermissionException("OBJECT HAS BEEN DELETED");
+        }
+        if(entity.getStatus().equals(ObjectStatus.SUCCESS)){
+            throw new BadRequestException("OBJECT ALREADY SUCCESSFUL");
+        }
+        objectRepository.changeStatus(entity.getUuid(), ObjectStatus.SUCCESS);
+
         return new ResponseInfoDTO(1, "OBJECT STATUS SUCCESSFULLY UPDATED");
     }
 
@@ -157,9 +180,9 @@ public class ObjectService {
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setVisible(entity.getVisible());
         dto.setStatus(entity.getStatus());
-
-
-
+        if(entity.getStatus().equals(ObjectStatus.WAITING)){
+            objectRepository.changeStatus(entity.getUuid(),ObjectStatus.PROCESSING);
+        }
         return dto;
 
     }
@@ -176,6 +199,9 @@ public class ObjectService {
         List<ObjectEntity> all = objectRepository.findAll();
         all.forEach(objectEntity -> {
             if(objectEntity.getVisible().equals(Boolean.TRUE)) {
+                if(objectEntity.getStatus().equals(ObjectStatus.WAITING)){
+                    objectRepository.changeStatus(objectEntity.getUuid(),ObjectStatus.PROCESSING);
+                }
                 ObjectShortInfoDTO shortInfoDTO = new ObjectShortInfoDTO();
                 shortInfoDTO.setCertificateDTO(certificateService.getDTO(objectEntity.getCertificate()));
                 shortInfoDTO.setLicenceDTO(licenceService.getDTO(objectEntity.getLicence()));
@@ -205,9 +231,43 @@ public class ObjectService {
         if (!profile.getRole().equals(ProfileRole.ROLE_ADMIN)) {
             throw new NotPermissionException("no access");
         }
-        objectRepository.delete(objectId,Boolean.FALSE,ObjectStatus.NOT_PUBLISHED);
+        objectRepository.delete(objectId,Boolean.FALSE,ObjectStatus.DELETED);
         return new ResponseInfoDTO(1,"Object successfully deleted");
     }
+
+
+    public List<ObjectShortInfoDTO> getByStatus(ObjectStatus status) {
+
+
+
+        List<ObjectShortInfoDTO> infoDTOList = new ArrayList<>();
+        List<ObjectEntity> all = objectRepository.findByStatus(status);
+        all.forEach(objectEntity -> {
+            if(objectEntity.getVisible().equals(Boolean.TRUE)) {
+                ObjectShortInfoDTO shortInfoDTO = new ObjectShortInfoDTO();
+                shortInfoDTO.setCertificateDTO(certificateService.getDTO(objectEntity.getCertificate()));
+                shortInfoDTO.setLicenceDTO(licenceService.getDTO(objectEntity.getLicence()));
+                shortInfoDTO.setName(objectEntity.getName());
+                shortInfoDTO.setGoal(objectEntity.getGoal());
+                shortInfoDTO.setOwnerInfo(objectEntity.getOwnerInfo());
+                shortInfoDTO.setOwnerSubject(objectEntity.getOwnerSubject());
+                shortInfoDTO.setDamages(objectEntity.getDamages());
+                shortInfoDTO.setCyber_security(objectEntity.getCyber_security());
+                shortInfoDTO.setHacked_outcomes(objectEntity.getHacked_outcomes());
+                shortInfoDTO.setActions(objectEntity.getActions());
+                shortInfoDTO.setThreats(objectEntity.getThreats());
+                shortInfoDTO.setImportance(objectEntity.getImportance());
+                shortInfoDTO.setWeb_usage(objectEntity.getWeb_usage());
+                infoDTOList.add(shortInfoDTO);
+            }
+
+        });
+
+
+
+        return infoDTOList;
+    }
+
 
 
 }

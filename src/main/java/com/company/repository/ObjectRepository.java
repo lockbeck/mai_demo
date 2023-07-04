@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface ObjectRepository extends JpaRepository<ObjectEntity, String> {
 
@@ -14,11 +15,14 @@ public interface ObjectRepository extends JpaRepository<ObjectEntity, String> {
     @Modifying
     @Transactional
     @Query("update ObjectEntity as o set o.status =?2 where o.uuid =?1")
-    void publish(String id, ObjectStatus status);
+    void changeStatus(String id, ObjectStatus status);
     @Modifying
     @Transactional
     @Query("update ObjectEntity as o set o.visible =?2, o.status =?3 where o.uuid =?1")
     void delete(String id, Boolean visible,ObjectStatus status);
+
+
+    List<ObjectEntity> findByStatus(ObjectStatus status);
 
 
 }

@@ -5,6 +5,7 @@ import com.company.dto.ResponseInfoDTO;
 import com.company.dto.object.ObjectCreatedDTO;
 import com.company.dto.object.ObjectFullInfoDTO;
 import com.company.dto.object.ObjectUpdateDTO;
+import com.company.enums.ObjectStatus;
 import com.company.service.ObjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,37 @@ public class ObjectController {
         return ResponseEntity.ok(update);
     }
 
+    @PutMapping("/adm/reject/{id}")
+    public ResponseEntity<?> reject(@PathVariable("id") String videoId) {
+
+        ResponseInfoDTO dto = objectService.reject(videoId);
+        return ResponseEntity.ok(dto);
+
+    }
+
+    @PutMapping("/adm/success/{id}")
+    public ResponseEntity<?> success(@PathVariable("id") String videoId) {
+
+        ResponseInfoDTO dto = objectService.success(videoId);
+        return ResponseEntity.ok(dto);
+
+    }
+    @DeleteMapping("/adm/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") String videoId) {
+
+        ResponseInfoDTO dto = objectService.delete(videoId);
+        return ResponseEntity.ok(dto);
+
+    }
+
+    @GetMapping("/getStatus/{status}")
+    public ResponseEntity<?> getByStatus(@PathVariable("status") ObjectStatus status) {
+
+        List<ObjectShortInfoDTO> dtoList  = objectService.getByStatus(status);
+        return ResponseEntity.ok(dtoList);
+
+    }
+
     @GetMapping("/man/pagination")
     public ResponseEntity<?> pagination() {
 
@@ -50,22 +82,5 @@ public class ObjectController {
         return ResponseEntity.ok(dto);
 
     }
-    @PutMapping("/adm/changeStatus/{id}")
-    public ResponseEntity<?> publish(@PathVariable("id") String videoId) {
-
-        ResponseInfoDTO dto = objectService.publish(videoId);
-        return ResponseEntity.ok(dto);
-
-    }
-
-    @DeleteMapping("/adm/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") String videoId) {
-
-        ResponseInfoDTO dto = objectService.delete(videoId);
-        return ResponseEntity.ok(dto);
-
-    }
-
-
 
 }
