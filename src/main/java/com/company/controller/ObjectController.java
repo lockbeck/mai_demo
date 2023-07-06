@@ -24,22 +24,22 @@ public class ObjectController {
     @PostMapping("")
     public ResponseEntity<?> created(@RequestBody @Valid ObjectCreatedDTO dto) {
 
-        ResponseInfoDTO responseInfoDTO = objectService.createObject(dto);
-        return ResponseEntity.ok(responseInfoDTO);
+        String response = objectService.createObject(dto);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/man/{id}")
     public ResponseEntity<?> update(@RequestBody ObjectUpdateDTO dto,
                                     @PathVariable("id") String videoId) {
 
-        ResponseInfoDTO update = objectService.update(dto, videoId);
+        String update = objectService.update(dto, videoId);
         return ResponseEntity.ok(update);
     }
 
     @PutMapping("/adm/reject/{id}")
     public ResponseEntity<?> reject(@PathVariable("id") String videoId) {
 
-        ResponseInfoDTO dto = objectService.reject(videoId);
+        String dto = objectService.reject(videoId);
         return ResponseEntity.ok(dto);
 
     }
@@ -47,14 +47,14 @@ public class ObjectController {
     @PutMapping("/adm/success/{id}")
     public ResponseEntity<?> success(@PathVariable("id") String videoId) {
 
-        ResponseInfoDTO dto = objectService.success(videoId);
+        String dto = objectService.success(videoId);
         return ResponseEntity.ok(dto);
 
     }
     @DeleteMapping("/adm/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") String videoId) {
 
-        ResponseInfoDTO dto = objectService.delete(videoId);
+        String dto = objectService.delete(videoId);
         return ResponseEntity.ok(dto);
 
     }

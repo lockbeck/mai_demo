@@ -9,6 +9,7 @@ import com.company.entity.ObjectEntity;
 import com.company.entity.ProfileEntity;
 import com.company.enums.ObjectStatus;
 import com.company.enums.ProfileRole;
+import com.company.enums.ProfileStatus;
 import com.company.exp.BadRequestException;
 import com.company.exp.ItemNotFoundException;
 import com.company.exp.NoPermissionException;
@@ -32,8 +33,14 @@ public class ObjectService {
     @Autowired
     private LicenceService licenceService;
 
-    public ResponseInfoDTO createObject(ObjectCreatedDTO dto) {
-
+    public String createObject(ObjectCreatedDTO dto) {
+        ProfileEntity profile = profileService.getProfile();
+        if (!profile.getRole().equals(ProfileRole.ROLE_USER)) {
+            throw  new NoPermissionException("no access");
+        }
+        if (profile.getStatus().equals(ProfileStatus.BLOCKED)||(profile.getStatus().equals(ProfileStatus.NOT_ACTIVE))) {
+            throw  new NoPermissionException("no access");
+        }
 
         ObjectEntity entity = new ObjectEntity();
         entity.setName(dto.getName());
@@ -52,21 +59,24 @@ public class ObjectService {
         entity.setActions(dto.getActions());
         entity.setStatus(ObjectStatus.WAITING);
 
-
         objectRepository.save(entity);
 
-
-        return new ResponseInfoDTO(1, "Object successfully created");
+        return "Object successfully created";
     }
 
-    public ResponseInfoDTO update(ObjectUpdateDTO dto, String objectId) {
+    public String update(ObjectUpdateDTO dto, String objectId) {
 
         ProfileEntity profile = profileService.getProfile();
 
         ObjectEntity entity = get(objectId);
 
         if (!profile.getRole().equals(ProfileRole.ROLE_MANAGER)) {
-            return new ResponseInfoDTO(-1, "no access");
+            throw  new NoPermissionException("no access");
+
+        }
+        if (profile.getStatus().equals(ProfileStatus.BLOCKED)||(profile.getStatus().equals(ProfileStatus.NOT_ACTIVE))) {
+            throw  new NoPermissionException("no access");
+
         }
         if(entity.getVisible().equals(Boolean.FALSE)){
             throw new NoPermissionException("OBJECT HAS BEEN DELETED");
@@ -79,10 +89,8 @@ public class ObjectService {
         entity.setImportance(dto.getImportance());
         entity.setDamages(dto.getDamages());
 
-
         entity.setCertificate(certificateService.saveNew(entity.getCertificate(),dto.getCertificateDTO()));
         entity.setLicence(licenceService.saveNew(entity.getLicence(),dto.getLicenceDTO()));
-
 
         entity.setWeb_usage(dto.getWeb_usage());
         entity.setCyber_security(dto.getCyber_security());
@@ -92,18 +100,20 @@ public class ObjectService {
 
         objectRepository.save(entity);
 
-
-
-        return new ResponseInfoDTO(1, "Object successfully updated");
-
+        return "Object successfully updated";
     }
-    public ResponseInfoDTO reject(String objectId){
+    public String reject(String objectId){
         ProfileEntity profile = profileService.getProfile();
 
         ObjectEntity entity = get(objectId);
 
         if (!profile.getRole().equals(ProfileRole.ROLE_ADMIN)) {
-            return new ResponseInfoDTO(-1, "no access");
+            throw  new NoPermissionException("no access");
+
+        }
+        if (profile.getStatus().equals(ProfileStatus.BLOCKED)||(profile.getStatus().equals(ProfileStatus.NOT_ACTIVE))) {
+            throw  new NoPermissionException("no access");
+
         }
         if(entity.getVisible().equals(Boolean.FALSE)){
             throw new NoPermissionException("OBJECT HAS BEEN DELETED");
@@ -113,15 +123,21 @@ public class ObjectService {
         }
         objectRepository.changeStatus(entity.getUuid(), ObjectStatus.REJECTED);
 
-        return new ResponseInfoDTO(1, "OBJECT STATUS SUCCESSFULLY UPDATED");
+        return "OBJECT REJECTED";
     }
-    public ResponseInfoDTO success(String objectId){
+
+    public String success(String objectId){
         ProfileEntity profile = profileService.getProfile();
 
         ObjectEntity entity = get(objectId);
 
         if (!profile.getRole().equals(ProfileRole.ROLE_ADMIN)) {
-            return new ResponseInfoDTO(-1, "no access");
+            throw  new NoPermissionException("no access");
+
+        }
+        if (profile.getStatus().equals(ProfileStatus.BLOCKED)||(profile.getStatus().equals(ProfileStatus.NOT_ACTIVE))) {
+            throw  new NoPermissionException("no access");
+
         }
         if(entity.getVisible().equals(Boolean.FALSE)){
             throw new NoPermissionException("OBJECT HAS BEEN DELETED");
@@ -131,10 +147,8 @@ public class ObjectService {
         }
         objectRepository.changeStatus(entity.getUuid(), ObjectStatus.SUCCESS);
 
-        return new ResponseInfoDTO(1, "OBJECT STATUS SUCCESSFULLY UPDATED");
+        return "OBJECT  SUCCESS";
     }
-
-
 
     private ObjectEntity get(String objectId) {
 
@@ -143,22 +157,19 @@ public class ObjectService {
         });
     }
 
-
-
-
-
-
-
     public ObjectFullInfoDTO getById(String videoId) {
 
         ProfileEntity profile = profileService.getProfile();
 
-        ObjectEntity entity = get(videoId);
 
         if (profile.getRole().equals(ProfileRole.ROLE_USER)) {
             throw new NotPermissionException("no access");
         }
+        if (profile.getStatus().equals(ProfileStatus.BLOCKED)||(profile.getStatus().equals(ProfileStatus.NOT_ACTIVE))) {
+            throw new NotPermissionException("no access");
+        }
 
+        ObjectEntity entity = get(videoId);
         ObjectFullInfoDTO dto = new ObjectFullInfoDTO();
         if(entity.getVisible().equals(Boolean.FALSE)){
             throw new NoPermissionException("OBJECT HAS BEEN DELETED");
@@ -184,7 +195,6 @@ public class ObjectService {
             objectRepository.changeStatus(entity.getUuid(),ObjectStatus.PROCESSING);
         }
         return dto;
-
     }
 
     public List<ObjectShortInfoDTO> pagination() {
@@ -192,6 +202,9 @@ public class ObjectService {
         ProfileEntity profile = profileService.getProfile();
 
         if (profile.getRole().equals(ProfileRole.ROLE_USER)) {
+            throw new NotPermissionException("no access");
+        }
+        if (profile.getStatus().equals(ProfileStatus.BLOCKED)||(profile.getStatus().equals(ProfileStatus.NOT_ACTIVE))) {
             throw new NotPermissionException("no access");
         }
 
@@ -218,28 +231,33 @@ public class ObjectService {
                 shortInfoDTO.setWeb_usage(objectEntity.getWeb_usage());
                 infoDTOList.add(shortInfoDTO);
             }
-
         });
-
-
-
         return infoDTOList;
     }
-    public ResponseInfoDTO delete(String objectId){
+
+    public String delete(String objectId){
         ProfileEntity profile = profileService.getProfile();
 
         if (!profile.getRole().equals(ProfileRole.ROLE_ADMIN)) {
-            throw new NotPermissionException("no access");
+            throw  new NoPermissionException("no access");
+
         }
+        if (profile.getStatus().equals(ProfileStatus.BLOCKED)||(profile.getStatus().equals(ProfileStatus.NOT_ACTIVE))) {
+            throw  new NoPermissionException("no access");
+
+
+        }
+
         objectRepository.delete(objectId,Boolean.FALSE,ObjectStatus.DELETED);
-        return new ResponseInfoDTO(1,"Object successfully deleted");
+        return "Object successfully deleted";
     }
 
-
     public List<ObjectShortInfoDTO> getByStatus(ObjectStatus status) {
+        ProfileEntity profile = profileService.getProfile();
 
-
-
+        if (profile.getStatus().equals(ProfileStatus.BLOCKED)||(profile.getStatus().equals(ProfileStatus.NOT_ACTIVE))) {
+            throw  new NoPermissionException("no access to see objects by status");
+        }
         List<ObjectShortInfoDTO> infoDTOList = new ArrayList<>();
         List<ObjectEntity> all = objectRepository.findByStatus(status);
         all.forEach(objectEntity -> {
@@ -260,14 +278,8 @@ public class ObjectService {
                 shortInfoDTO.setWeb_usage(objectEntity.getWeb_usage());
                 infoDTOList.add(shortInfoDTO);
             }
-
         });
-
-
-
         return infoDTOList;
     }
-
-
 
 }

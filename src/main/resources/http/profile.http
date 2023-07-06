@@ -16,3 +16,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODcyNTYxNDEsImV4cCI6MTY4N
   "password": "manager1",
   "role": "ROLE_MANAGER"
 }
+
+###GET USER LIST
+GET http://localhost:8080/profile/adm/list
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2ODg2MjUwODAsImV4cCI6MTY4ODcxMTQ4MCwiaXNzIjoiTWF6Z2kgcHJvZHVjdGlvbiIsImlkIjozfQ.JSy5vkIXJ3K2XBmT16SBfrT2zdtcewGOgpjccdhpnxk

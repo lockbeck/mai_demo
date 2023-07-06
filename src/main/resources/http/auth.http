@@ -1,19 +1,21 @@
 ### USER LOGIN
-POST http://localhost:8085/auth/login
+POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
   "email": "user@gmail.com",
   "password": "user1"
 }
+
 ### MANAGER LOGIN
 POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "email": "manager@gmail.com",
-  "password": "manager1"
+  "email": "manager2@gmail.com",
+  "password": "manager2"
 }
+
 ### ADMIN LOGIN
 POST http://localhost:8080/auth/login
 Content-Type: application/json
@@ -22,6 +24,7 @@ Content-Type: application/json
   "email": "admin@gmail.com",
   "password": "admin1"
 }
+
 ### SUPER_ADMIN_LOGIN
 POST http://localhost:8085/auth/login
 Content-Type: application/json
@@ -30,8 +33,6 @@ Content-Type: application/json
   "email": "t.lochin.98@gmail.com",
   "password": "1111"
 }
-
-
 
 ###
 POST https://carpetwep.herokuapp.com/auth/login

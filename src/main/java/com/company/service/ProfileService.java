@@ -5,9 +5,11 @@ import com.company.dto.ResponseInfoDTO;
 import com.company.dto.profile.ChangePasswordDTO;
 import com.company.dto.profile.ProfileDTO;
 import com.company.entity.ProfileEntity;
+import com.company.enums.ProfileRole;
 import com.company.enums.ProfileStatus;
 import com.company.exp.BadRequestException;
 import com.company.exp.ItemNotFoundException;
+import com.company.exp.NoPermissionException;
 import com.company.repository.ProfileRepository;
 import com.company.util.JwtUtil;
 import com.company.util.MD5Util;
@@ -35,6 +37,15 @@ public class ProfileService {
 
     // admin
     public ProfileDTO create(ProfileDTO dto) {
+        ProfileEntity profile = getProfile();
+
+        if (!profile.getRole().equals(ProfileRole.ROLE_ADMIN)&&!profile.getVisible()) {
+            throw  new NoPermissionException("no access");
+        }
+        if (profile.getStatus().equals(ProfileStatus.BLOCKED)||(profile.getStatus().equals(ProfileStatus.NOT_ACTIVE))) {
+            throw  new NoPermissionException("no access");
+        }
+
         // name; surname; login; password;
         Optional<ProfileEntity> optional = profileRepository.findByEmail(dto.getEmail());
         if (optional.isPresent()) {
@@ -94,6 +105,8 @@ public class ProfileService {
             profileDTO.setCreatedDate(profileEntity.getCreatedDate());
             profileDTO.setUsername(profileEntity.getUsername());
             profileDTO.setId(profileEntity.getId());
+            profileDTO.setRole(profileEntity.getRole());
+            profileDTO.setStatus(profileEntity.getStatus());
 
             profileDTOS.add(profileDTO);
         });
@@ -102,9 +115,22 @@ public class ProfileService {
     }
 
     public ProfileDTO changeVisible(Integer profileId) {
+        ProfileEntity profile =  getProfile();
 
+        if (!profile.getRole().equals(ProfileRole.ROLE_ADMIN)&&!profile.getVisible()) {
+            throw  new NoPermissionException("no access");
+        }
+        if (profile.getStatus().equals(ProfileStatus.BLOCKED)||(profile.getStatus().equals(ProfileStatus.NOT_ACTIVE))) {
+            throw  new NoPermissionException("no access");
+        }
         ProfileEntity entity = get(profileId);
         entity.setVisible(!entity.getVisible());
+        if(entity.getStatus().equals(ProfileStatus.ACTIVE)){
+            entity.setStatus(ProfileStatus.BLOCKED);
+        }
+        else {
+            entity.setStatus(ProfileStatus.ACTIVE);
+        }
 
         profileRepository.save(entity);
 
@@ -122,13 +148,17 @@ public class ProfileService {
         return user.getProfile();
     }
 
-    public ResponseInfoDTO changePassword(ChangePasswordDTO dto) {
+    public String changePassword(ChangePasswordDTO dto) {
 
         ProfileEntity profile = getProfile();
+        if (profile.getStatus().equals(ProfileStatus.BLOCKED)||(profile.getStatus().equals(ProfileStatus.NOT_ACTIVE))) {
+            throw  new NoPermissionException("no access");
+
+        }
         profile.setPassword(MD5Util.getMd5(dto.getPassword()));
         profileRepository.save(profile);
 
-        return new ResponseInfoDTO(1, "success");
+        return "PASSWORD CHANGED";
 
     }
 

@@ -53,8 +53,8 @@ public class ProfileController {
     }
 
     @ApiOperation(value = "profile change visible by admin")
-    @DeleteMapping("/adm/delete")
-    public ResponseEntity<?> changeVisible(@RequestParam("id") Integer profileId) {
+    @DeleteMapping("/adm/delete/{id}")
+    public ResponseEntity<?> changeVisible(@PathVariable("id") Integer profileId) {
 
         ProfileDTO profileDTO = profileService.changeVisible(profileId);
         log.info("Request profile change visible by admin profileId:{}", profileId);
@@ -70,7 +70,7 @@ public class ProfileController {
     @PostMapping("/change_pass")
     public ResponseEntity<?> changePassword(@RequestBody @Valid ChangePasswordDTO dto){
 
-        ResponseInfoDTO dto1 = profileService.changePassword(dto);
+        String dto1 = profileService.changePassword(dto);
 
         return ResponseEntity.ok(dto1);
 
